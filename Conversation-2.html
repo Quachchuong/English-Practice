@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Daily Conversation - Level 2</title>
+    <style>
+        :root {
+            --char-a-color: #00b894;
+            --char-b-color: #0984e3;
+            --text-dark: #2d3436;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg-gradient);
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            width: 100%; max-width: 500px;
+            background: white; border-radius: 30px;
+            padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        #role-selection { display: block; }
+        .role-card {
+            padding: 25px; margin: 15px 0;
+            border-radius: 20px; border: 2px solid #dfe6e9;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .role-card:active { transform: scale(0.98); }
+        .role-card.a { border-color: var(--char-a-color); color: var(--char-a-color); }
+        .role-card.b { border-color: var(--char-b-color); color: var(--char-b-color); }
+
+        #lesson-stage { display: none; }
+        #main-stage {
+            background: #fff9db; border: 3px dashed #f1c40f;
+            border-radius: 25px; padding: 40px 20px;
+            min-height: 280px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; margin: 20px 0;
+        }
+
+        #role-indicator { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; }
+        #sentence-text { font-size: 1.3rem; font-weight: bold; line-height: 1.5; color: var(--text-dark); }
+
+        #speakBtn {
+            width: 100px; height: 100px; border-radius: 50%; border: none;
+            background: var(--char-b-color); color: white;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        #speakBtn.active { background: #d63031; transform: scale(0.95); }
+        #speakBtn .icon { font-size: 30px; margin-bottom: 5px; }
+
+        .btn-system {
+            padding: 12px 25px; border-radius: 50px; border: none;
+            font-weight: bold; cursor: pointer; background: #636e72; color: white;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="role-selection">
+        <h2 style="margin-top:0">Daily Conversation<br>Level 2</h2>
+        <p>Choose your character:</p>
+        <div class="role-card a" onclick="startLesson('A')">
+            <h3>I want to be A</h3>
+            <p>(Start first)</p>
+        </div>
+        <div class="role-card b" onclick="startLesson('B')">
+            <h3>I want to be B</h3>
+            <p>(Listen first)</p>
+        </div>
+    </div>
+
+    <div id="lesson-stage">
+        <div id="role-indicator">---</div>
+        <div id="main-stage">
+            <div id="sentence-text">Preparing...</div>
+            <div style="height: 120px; display: flex; align-items: center; margin-top: 20px;">
+                <button id="speakBtn">
+                    <span class="icon">🎤</span>
+                    <span id="btn-label">HOLD</span>
+                </button>
+            </div>
+            <div id="mic-hint" style="font-size: 0.8rem; color: #636e72; margin-top: 10px;"></div>
+        </div>
+        <button class="btn-system" onclick="location.reload()">🔄 Switch Role</button>
+        <button class="btn-system" onclick="smartBack()" style="background:none; color:#636e72; text-decoration:underline">Exit</button>
+    </div>
+</div>
+
+<script>
+    const script = [
+        { a: "Hi, how are you today?", b: "I’m fine, thank you. And you?" },
+        { a: "What did you do yesterday?", b: "I stayed at home and watched TV." },
+        { a: "Do you like watching movies?", b: "Yes, I like action movies." },
+        { a: "...", b: "" }, // Khoảng nghỉ ngắn
+        { a: "What time do you usually wake up?", b: "I usually wake up at six o’clock." },
+        { a: "Do you have breakfast every day?", b: "Yes, I do. I eat bread and eggs." },
+        { a: "How do you go to work?", b: "I go to work by motorbike." },
+        { a: "Is your office far from your house?", b: "No, it’s quite near." },
+        { a: "...", b: "" }, // Khoảng nghỉ ngắn
+        { a: "What do you do after work?", b: "I often relax and listen to music." },
+        { a: "Do you like coffee or tea?", b: "I like coffee more than tea." },
+        { a: "How often do you exercise?", b: "I exercise three times a week." },
+        { a: "What is your favorite food?", b: "I like noodles and rice." },
+        { a: "Can you cook?", b: "Yes, I can cook simple meals." },
+        { a: "...", b: "" }, // Khoảng nghỉ ngắn
+        { a: "What are you doing now?", b: "I’m reading a book." },
+        { a: "Do you like reading books?", b: "Yes, especially short stories." },
+        { a: "What kind of music do you like?", b: "I like soft and relaxing music." },
+        { a: "Do you use your phone a lot?", b: "Yes, I use it every day." },
+        { a: "Who do you live with?", b: "I live with my family." },
+        { a: "Do you have any brothers or sisters?", b: "Yes, I have one sister." },
+        { a: "What do you usually do on weekends?", b: "I visit my friends or stay at home." },
+        { a: "...", b: "" }, // Khoảng nghỉ ngắn
+        { a: "Do you like traveling?", b: "Yes, I like visiting new places." },
+        { a: "Where did you go last holiday?", b: "I went to the beach." },
+        { a: "Was the trip fun?", b: "Yes, it was very relaxing." },
+        { a: "What is your favorite season?", b: "I like spring the most." },
+        { a: "Why do you like spring?", b: "Because the weather is nice." },
+        { a: "Do you speak English every day?", b: "I try to practice every day." },
+        { a: "Is English difficult for you?", b: "A little, but I enjoy learning it." },
+        { a: "How do you learn English?", b: "I watch videos and read books." },
+        { a: "Do you like studying alone or with friends?", b: "I like studying with friends." },
+        { a: "What time do you go to bed?", b: "I usually go to bed at ten." },
+        { a: "Do you sleep well at night?", b: "Yes, I sleep quite well." },
+        { a: "...", b: "" }, // Khoảng nghỉ ngắn
+        { a: "What is your job?", b: "I’m an office worker." },
+        { a: "Do you like your job?", b: "Yes, it’s interesting." },
+        { a: "Is your job stressful?", b: "Sometimes, but not too much." },
+        { a: "What do you do when you feel tired?", b: "I rest or listen to music." },
+        { a: "Do you like shopping?", b: "Yes, but I don’t shop a lot." },
+        { a: "What did you buy last time?", b: "I bought some clothes." },
+        { a: "Do you like online shopping?", b: "Yes, it’s very convenient." },
+        { a: "What is your favorite place to relax?", b: "I like staying at home." },
+        { a: "Do you like pets?", b: "Yes, I like dogs." },
+        { a: "Do you have a pet?", b: "No, I don’t have one yet." },
+        { a: "What do you usually eat for lunch?", b: "I eat rice and vegetables." },
+        { a: "Do you drink enough water every day?", b: "Yes, I try to drink a lot." },
+        { a: "Are you busy today?", b: "Not really. I’m quite free." },
+        { a: "Do you want to go out later?", b: "Yes, that sounds good." },
+        { a: "Where do you want to go?", b: "Let’s go to a café." },
+        { a: "What time should we meet?", b: "How about seven o’clock?" },
+        { a: "Is that okay for you?", b: "Yes, it’s perfect." },
+        { a: "See you later then.", b: "See you. Take care!" },
+        { a: "Have a nice evening!", b: "Thank you. You too!" },
+        { a: "It was nice talking to you.", b: "Yes, I enjoyed it very much." }
+    ];
+
+    const fullConversation = [];
+    script.forEach(pair => {
+        if(pair.a !== undefined && pair.a !== "") fullConversation.push({ role: 'A', text: pair.a });
+        if(pair.b !== undefined && pair.b !== "") fullConversation.push({ role: 'B', text: pair.b });
+    });
+
+    let userRole = '';
+    let currentIndex = 0;
+    const synth = window.speechSynthesis;
+
+    function startLesson(role) {
+        userRole = role;
+        document.getElementById('role-selection').style.display = 'none';
+        document.getElementById('lesson-stage').style.display = 'block';
+        const unlock = new SpeechSynthesisUtterance("");
+        synth.speak(unlock);
+        playRound();
+    }
+
+    function updateUI() {
+        const current = fullConversation[currentIndex];
+        const roleInd = document.getElementById('role-indicator');
+        const sentTxt = document.getElementById('sentence-text');
+        const speakBtn = document.getElementById('speakBtn');
+        const micHint = document.getElementById('mic-hint');
+
+        const isUserTurn = current.role === userRole;
+        const themeColor = userRole === 'A' ? 'var(--char-a-color)' : 'var(--char-b-color)';
+        
+        roleInd.textContent = isUserTurn ? `YOUR TURN (${userRole})` : `LISTENING TO ${current.role}...`;
+        roleInd.style.color = isUserTurn ? themeColor : '#d63031';
+        
+        sentTxt.textContent = current.text;
+        sentTxt.style.color = isUserTurn ? themeColor : '#2d3436';
+
+        speakBtn.style.backgroundColor = themeColor;
+        speakBtn.style.display = isUserTurn ? 'flex' : 'none';
+        micHint.textContent = isUserTurn ? "Hold the button and speak" : "";
+    }
+
+    async function playRound() {
+        if (currentIndex >= fullConversation.length) {
+            document.getElementById('sentence-text').textContent = "🌟 Excellent! You've completed the Level 2 conversation.";
+            document.getElementById('speakBtn').style.display = 'none';
+            document.getElementById('role-indicator').textContent = "FINISHED";
+            return;
+        }
+
+        updateUI();
+        const current = fullConversation[currentIndex];
+
+        if (current.role !== userRole) {
+            await new Promise(r => setTimeout(r, 800));
+            speak(current.text);
+        }
+    }
+
+    function speak(text) {
+        synth.cancel();
+
+        // Xử lý khoảng lặng thông minh
+        if (text === "...") {
+            setTimeout(() => {
+                currentIndex++;
+                playRound();
+            }, 1000); // Nghỉ 2 giây
+            return;
+        }
+
+        const ut = new SpeechSynthesisUtterance(text);
+        ut.lang = 'en-US';
+        ut.rate = 1.0; 
+        ut.onend = () => { currentIndex++; playRound(); };
+        synth.speak(ut);
+    }
+
+    function startActing() {
+        document.getElementById('speakBtn').classList.add('active');
+        document.getElementById('btn-label').textContent = "SPEAKING";
+    }
+
+    function stopActing() {
+        document.getElementById('speakBtn').classList.remove('active');
+        document.getElementById('btn-label').textContent = "HOLD";
+        currentIndex++;
+        playRound();
+    }
+
+    function smartBack() {
+        if (window.opener || window.history.length === 1) window.close();
+        else window.history.back();
+    }
+
+    const sBtn = document.getElementById('speakBtn');
+    sBtn.onmousedown = startActing;
+    window.onmouseup = () => { if(sBtn.classList.contains('active')) stopActing(); };
+    sBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startActing(); }, {passive: false});
+    sBtn.addEventListener('touchend', (e) => { e.preventDefault(); stopActing(); }, {passive: false});
+</script>
+</body>
+</html>
