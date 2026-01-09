@@ -1,17 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Daily Conversation - Level 2</title>
+    <title>Daily Conversation - Level 3</title>
     <style>
         :root {
-            --char-a-color: #00b894;
-            --char-b-color: #0984e3;
+            --char-a-color: #e17055;  /* Cam ?m áp */
+            --char-b-color: #8e44ad;  /* Tím */
             --text-dark: #2d3436;
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             background: var(--bg-gradient);
@@ -19,57 +18,54 @@
             display: flex; justify-content: center; align-items: center;
             min-height: 100vh; -webkit-tap-highlight-color: transparent;
         }
-
         .container {
-            width: 100%; max-width: 500px;
+            width: 100%; max-width: 520px;
             background: white; border-radius: 30px;
-            padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.12);
             text-align: center;
         }
-
         #role-selection { display: block; }
         .role-card {
-            padding: 25px; margin: 15px 0;
+            padding: 28px; margin: 18px 0;
             border-radius: 20px; border: 2px solid #dfe6e9;
-            cursor: pointer; transition: all 0.3s;
+            cursor: pointer; transition: all 0.3s ease;
         }
-        .role-card:active { transform: scale(0.98); }
+        .role-card:active { transform: scale(0.97); }
         .role-card.a { border-color: var(--char-a-color); color: var(--char-a-color); }
         .role-card.b { border-color: var(--char-b-color); color: var(--char-b-color); }
-
         #lesson-stage { display: none; }
         #main-stage {
-            background: #fff9db; border: 3px dashed #f1c40f;
-            border-radius: 25px; padding: 40px 20px;
-            min-height: 280px; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; margin: 20px 0;
+            background: #f8f0ff; border: 3px dashed #b980f0;
+            border-radius: 25px; padding: 45px 20px;
+            min-height: 300px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; margin: 25px 0;
         }
-
-        #role-indicator { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; }
-        #sentence-text { font-size: 1.3rem; font-weight: bold; line-height: 1.5; color: var(--text-dark); }
-
+        #role-indicator { font-size: 0.95rem; font-weight: 800; text-transform: uppercase; margin-bottom: 18px; }
+        #sentence-text { font-size: 1.35rem; font-weight: bold; line-height: 1.6; color: var(--text-dark); }
         #speakBtn {
-            width: 100px; height: 100px; border-radius: 50%; border: none;
+            width: 110px; height: 110px; border-radius: 50%; border: none;
             background: var(--char-b-color); color: white;
-            font-size: 1rem; font-weight: bold; cursor: pointer;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer;
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+            transition: all 0.2s;
         }
-        #speakBtn.active { background: #d63031; transform: scale(0.95); }
-        #speakBtn .icon { font-size: 30px; margin-bottom: 5px; }
-
+        #speakBtn.active { background: #e74c3c; transform: scale(0.94); }
+        #speakBtn .icon { font-size: 34px; margin-bottom: 6px; }
         .btn-system {
-            padding: 12px 25px; border-radius: 50px; border: none;
+            padding: 14px 28px; border-radius: 50px; border: none;
             font-weight: bold; cursor: pointer; background: #636e72; color: white;
-            margin: 5px;
+            margin: 8px;
+        }
+        #next-lesson-btn {
+            background: #27ae60; margin-top: 15px;
         }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div id="role-selection">
-        <h2 style="margin-top:0">Daily Conversation<br>Level 2</h2>
+        <h2 style="margin-top:0">Daily Conversation<br>Level 3</h2>
         <p>Choose your character:</p>
         <div class="role-card a" onclick="startLesson('A')">
             <h3>I want to be A</h3>
@@ -80,87 +76,86 @@
             <p>(Listen first)</p>
         </div>
     </div>
-
     <div id="lesson-stage">
         <div id="role-indicator">---</div>
         <div id="main-stage">
             <div id="sentence-text">Preparing...</div>
-            <div style="height: 120px; display: flex; align-items: center; margin-top: 20px;">
+            <div style="height: 130px; display: flex; align-items: center; margin-top: 25px;">
                 <button id="speakBtn">
                     <span class="icon">🎤</span>
                     <span id="btn-label">HOLD</span>
                 </button>
             </div>
-            <div id="mic-hint" style="font-size: 0.8rem; color: #636e72; margin-top: 10px;"></div>
+            <div id="mic-hint" style="font-size: 0.85rem; color: #636e72; margin-top: 12px;"></div>
         </div>
-        <button class="btn-system" onclick="location.reload()">🔄 Switch Role</button>
+        <button class="btn-system" onclick="location.reload()"> 🎤 Switch Role</button>
         <button class="btn-system" onclick="smartBack()" style="background:none; color:#636e72; text-decoration:underline">Exit</button>
+        <button id="next-lesson-btn" class="btn-system" style="display:none;" onclick="alert('Coming soon! Stay tuned for Level 4 ??')">?? Next Lesson</button>
     </div>
 </div>
-
 <script>
-    const script = [
-        { a: "Hi, how are you today?", b: "I’m fine, thank you. And you?" },
-        { a: "What did you do yesterday?", b: "I stayed at home and watched TV." },
-        { a: "Do you like watching movies?", b: "Yes, I like action movies." },
-        { a: "...", b: "" }, // Khoảng nghỉ ngắn
-        { a: "What time do you usually wake up?", b: "I usually wake up at six o’clock." },
-        { a: "Do you have breakfast every day?", b: "Yes, I do. I eat bread and eggs." },
-        { a: "How do you go to work?", b: "I go to work by motorbike." },
-        { a: "Is your office far from your house?", b: "No, it’s quite near." },
-        { a: "...", b: "" }, // Khoảng nghỉ ngắn
-        { a: "What do you do after work?", b: "I often relax and listen to music." },
-        { a: "Do you like coffee or tea?", b: "I like coffee more than tea." },
-        { a: "How often do you exercise?", b: "I exercise three times a week." },
-        { a: "What is your favorite food?", b: "I like noodles and rice." },
-        { a: "Can you cook?", b: "Yes, I can cook simple meals." },
-        { a: "...", b: "" }, // Khoảng nghỉ ngắn
-        { a: "What are you doing now?", b: "I’m reading a book." },
-        { a: "Do you like reading books?", b: "Yes, especially short stories." },
-        { a: "What kind of music do you like?", b: "I like soft and relaxing music." },
-        { a: "Do you use your phone a lot?", b: "Yes, I use it every day." },
-        { a: "Who do you live with?", b: "I live with my family." },
-        { a: "Do you have any brothers or sisters?", b: "Yes, I have one sister." },
-        { a: "What do you usually do on weekends?", b: "I visit my friends or stay at home." },
-        { a: "...", b: "" }, // Khoảng nghỉ ngắn
-        { a: "Do you like traveling?", b: "Yes, I like visiting new places." },
-        { a: "Where did you go last holiday?", b: "I went to the beach." },
-        { a: "Was the trip fun?", b: "Yes, it was very relaxing." },
-        { a: "What is your favorite season?", b: "I like spring the most." },
-        { a: "Why do you like spring?", b: "Because the weather is nice." },
-        { a: "Do you speak English every day?", b: "I try to practice every day." },
-        { a: "Is English difficult for you?", b: "A little, but I enjoy learning it." },
-        { a: "How do you learn English?", b: "I watch videos and read books." },
-        { a: "Do you like studying alone or with friends?", b: "I like studying with friends." },
-        { a: "What time do you go to bed?", b: "I usually go to bed at ten." },
-        { a: "Do you sleep well at night?", b: "Yes, I sleep quite well." },
-        { a: "...", b: "" }, // Khoảng nghỉ ngắn
-        { a: "What is your job?", b: "I’m an office worker." },
-        { a: "Do you like your job?", b: "Yes, it’s interesting." },
-        { a: "Is your job stressful?", b: "Sometimes, but not too much." },
-        { a: "What do you do when you feel tired?", b: "I rest or listen to music." },
-        { a: "Do you like shopping?", b: "Yes, but I don’t shop a lot." },
-        { a: "What did you buy last time?", b: "I bought some clothes." },
-        { a: "Do you like online shopping?", b: "Yes, it’s very convenient." },
-        { a: "What is your favorite place to relax?", b: "I like staying at home." },
-        { a: "Do you like pets?", b: "Yes, I like dogs." },
-        { a: "Do you have a pet?", b: "No, I don’t have one yet." },
-        { a: "What do you usually eat for lunch?", b: "I eat rice and vegetables." },
-        { a: "Do you drink enough water every day?", b: "Yes, I try to drink a lot." },
-        { a: "Are you busy today?", b: "Not really. I’m quite free." },
-        { a: "Do you want to go out later?", b: "Yes, that sounds good." },
-        { a: "Where do you want to go?", b: "Let’s go to a café." },
-        { a: "What time should we meet?", b: "How about seven o’clock?" },
-        { a: "Is that okay for you?", b: "Yes, it’s perfect." },
-        { a: "See you later then.", b: "See you. Take care!" },
-        { a: "Have a nice evening!", b: "Thank you. You too!" },
-        { a: "It was nice talking to you.", b: "Yes, I enjoyed it very much." }
-    ];
+   const script = [
+  { a: "Hey, it's been a while! How have you been lately?", b: "I've been pretty good, thanks. Life's been busy but interesting." },
+  { a: "Busy in a good way, I hope?", b: "Yeah, mostly good things. Work has picked up a lot." },
+  { a: "Are you still working at the same company?", b: "Yes, but my role has changed a bit recently." },
+  { a: "Oh really? What kind of changes?", b: "I’m handling more responsibilities and small projects now." },
+  { a: "That sounds like progress.", b: "It is, though it can be stressful sometimes." },
+  { a: "...", b: "" },
+
+  { a: "How do you usually deal with stress?", b: "I try to exercise and avoid checking my phone too much." },
+  { a: "That’s a good habit. What kind of exercise do you do?", b: "Mostly jogging and some light workouts at home." },
+  { a: "Do you exercise every day?", b: "Not every day, but at least three times a week." },
+  { a: "Consistency is what matters.", b: "Exactly. I’ve learned that the hard way." },
+  { a: "...", b: "" },
+
+  { a: "Have you picked up any new hobbies recently?", b: "Actually yes, I started learning the guitar." },
+  { a: "Nice! What made you choose the guitar?", b: "I’ve always loved acoustic music, so it felt natural." },
+  { a: "Is it difficult to learn?", b: "At first, my fingers hurt a lot, but it’s getting better." },
+  { a: "How often do you practice?", b: "I try to practice for about an hour every evening." },
+  { a: "...", b: "" },
+
+  { a: "What kind of songs do you want to play?", b: "Mostly pop songs and some simple ballads." },
+  { a: "Have you played in front of anyone yet?", b: "Not yet. I’m still a bit shy about it." },
+  { a: "That’s understandable. Confidence comes with time.", b: "I hope so. Maybe I’ll play for friends soon." },
+  { a: "...", b: "" },
+
+  { a: "What do you usually do on weekends?", b: "I relax, practice guitar, or meet friends for coffee." },
+  { a: "Do you have a favorite café?", b: "Yes, there’s a small one near the park." },
+  { a: "What do you like about it?", b: "It’s quiet, cozy, and the coffee is great." },
+  { a: "...", b: "" },
+
+  { a: "Do you prefer working from home or the office?", b: "I prefer a mix of both, actually." },
+  { a: "Why is that?", b: "Working from home saves time, but the office feels more social." },
+  { a: "That makes sense.", b: "Yeah, balance is important." },
+  { a: "...", b: "" },
+
+  { a: "How do you manage your time when working remotely?", b: "I set a clear schedule and take short breaks." },
+  { a: "Do you ever get distracted?", b: "Of course, especially by social media." },
+  { a: "Same here. It’s hard to resist.", b: "I usually put my phone away when I need to focus." },
+  { a: "...", b: "" },
+
+  { a: "Have you read any good books lately?", b: "I just finished a mystery novel." },
+  { a: "Was it good?", b: "Very engaging. I couldn’t put it down." },
+  { a: "I should add it to my reading list.", b: "I can send you the title later." },
+  { a: "...", b: "" },
+
+  { a: "Are you planning any trips this year?", b: "Yes, I’m hoping to visit Japan in the fall." },
+  { a: "That sounds exciting!", b: "I’m really looking forward to it." },
+  { a: "What excites you the most?", b: "The food, culture, and autumn scenery." },
+  { a: "Have you started learning Japanese?", b: "Just basic phrases for now." },
+  { a: "...", b: "" },
+
+  { a: "That’s still a good start.", b: "I think so too." },
+  { a: "It was really nice catching up with you.", b: "Same here. We should talk more often." },
+  { a: "Definitely. Let’s not wait so long next time.", b: "Agreed. Take care!" },
+  { a: "You too. Good luck with the guitar!", b: "Thanks! See you soon." }
+];
+
 
     const fullConversation = [];
     script.forEach(pair => {
-        if(pair.a !== undefined && pair.a !== "") fullConversation.push({ role: 'A', text: pair.a });
-        if(pair.b !== undefined && pair.b !== "") fullConversation.push({ role: 'B', text: pair.b });
+        if (pair.a && pair.a.trim() !== "") fullConversation.push({ role: 'A', text: pair.a });
+        if (pair.b && pair.b.trim() !== "") fullConversation.push({ role: 'B', text: pair.b });
     });
 
     let userRole = '';
@@ -182,13 +177,12 @@
         const sentTxt = document.getElementById('sentence-text');
         const speakBtn = document.getElementById('speakBtn');
         const micHint = document.getElementById('mic-hint');
-
         const isUserTurn = current.role === userRole;
         const themeColor = userRole === 'A' ? 'var(--char-a-color)' : 'var(--char-b-color)';
-        
+
         roleInd.textContent = isUserTurn ? `YOUR TURN (${userRole})` : `LISTENING TO ${current.role}...`;
-        roleInd.style.color = isUserTurn ? themeColor : '#d63031';
-        
+        roleInd.style.color = isUserTurn ? themeColor : '#e74c3c';
+
         sentTxt.textContent = current.text;
         sentTxt.style.color = isUserTurn ? themeColor : '#2d3436';
 
@@ -199,15 +193,14 @@
 
     async function playRound() {
         if (currentIndex >= fullConversation.length) {
-            document.getElementById('sentence-text').textContent = "🌟 Excellent! You've completed the Level 2 conversation.";
+            document.getElementById('sentence-text').textContent = "?? Fantastic! You've completed Level 3!";
             document.getElementById('speakBtn').style.display = 'none';
-            document.getElementById('role-indicator').textContent = "FINISHED";
+            document.getElementById('role-indicator').textContent = "COMPLETED";
+            document.getElementById('next-lesson-btn').style.display = 'inline-block';
             return;
         }
-
         updateUI();
         const current = fullConversation[currentIndex];
-
         if (current.role !== userRole) {
             await new Promise(r => setTimeout(r, 800));
             speak(current.text);
@@ -216,19 +209,16 @@
 
     function speak(text) {
         synth.cancel();
-
-        // Xử lý khoảng lặng thông minh
         if (text === "...") {
             setTimeout(() => {
                 currentIndex++;
                 playRound();
-            }, 1000); // Nghỉ 2 giây
+            }, 1500);
             return;
         }
-
         const ut = new SpeechSynthesisUtterance(text);
         ut.lang = 'en-US';
-        ut.rate = 1.0; 
+        ut.rate = 0.95;
         ut.onend = () => { currentIndex++; playRound(); };
         synth.speak(ut);
     }
@@ -252,7 +242,7 @@
 
     const sBtn = document.getElementById('speakBtn');
     sBtn.onmousedown = startActing;
-    window.onmouseup = () => { if(sBtn.classList.contains('active')) stopActing(); };
+    window.onmouseup = () => { if (sBtn.classList.contains('active')) stopActing(); };
     sBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startActing(); }, {passive: false});
     sBtn.addEventListener('touchend', (e) => { e.preventDefault(); stopActing(); }, {passive: false});
 </script>
